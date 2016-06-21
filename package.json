@@ -1,0 +1,22 @@
+{
+  "name": "github-webhook-service",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/edasarl/github-webhook-service.git"
+  },
+  "author": "Jérémy Lal <kapouer@melix.org>",
+  "license": "UNLICENSED",
+  "bugs": {
+    "url": "https://github.com/edasarl/github-webhook-service/issues"
+  },
+  "homepage": "https://github.com/edasarl/github-webhook-service#readme",
+  "dependencies": {
+    "github-webhook": "^1.1.3"
+  }
+}

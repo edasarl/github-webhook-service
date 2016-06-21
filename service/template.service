@@ -1,0 +1,11 @@
+[Unit]
+Description=%p %i
+
+[Service]
+ExecStart=/bin/sh $SITE/bin/run
+Restart=always
+Environment=NODE_ENV=$NODE_ENV
+WatchdogSec=1d
+
+[Install]
+WantedBy=default.target
