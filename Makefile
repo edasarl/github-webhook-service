@@ -13,13 +13,13 @@ endif
 $(info NODE_ENV $(NODE_ENV))
 $(info SITE $(SITE))
 
-PUBLIC_FILES="Makefile app.js bin *.json"
+PUBLIC_FILES="Makefile bin *.json"
 
 .PHONY: copy
 copy:
 ifneq "$(CURDIR)" "$(SITE)"
 	mkdir -p $(SITE)
-	rsync -arcv --exclude="node_modules" --exclude="service" --exclude="private" --exclude="public/google*.html" --exclude="cache" --exclude="public/uploads" --exclude="public/bundles" --delete "${PUBLIC_FILES}" ${SITE}/
+	rsync -arcv --exclude="node_modules" --exclude="service" --exclude="config.json" --delete "${PUBLIC_FILES}" ${SITE}/
 endif
 
 .PHONY: node_modules
