@@ -4,7 +4,7 @@ Description=%p %i
 [Service]
 ExecStart=/bin/sh $SITE/bin/run
 Restart=always
-Environment=NODE_ENV=$NODE_ENV
+Environment=NODE_ENV=$NODE_ENV DEBUG=github-webhook:events
 WatchdogSec=1d
 
 [Install]
