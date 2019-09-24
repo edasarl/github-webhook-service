@@ -3,26 +3,25 @@
 remote="origin"
 prod="prod"
 
-bare=$1
-
 ref=${gh_ref}		# refs/heads/<branch> or refs/tags/<tag>
 
 # get latest changes
-cd $bare
 git fetch --all -f -p
 
 branch=""
 commit=""
 
 code=1
-if [[ "${ref}" =~ ^refs/heads/* ]]; then
+if [ "${ref}" != "${ref#refs/heads/}" ]; then
 	branch=${ref#refs/heads/}
-	commit=`git show-ref -s refs/remotes/${upstream}/${branch}`
-else if [[ "${ref}" =~ ^refs/tags/* ]]; then
+	commit=`git show-ref -s refs/remotes/${remote}/${branch}`
+elif [ "${ref}" != "${ref#refs/tags/}" ]; then
 	# check if last commit of branch prod is this commit
 	if [ `git branch -r --contains ${ref} ${remote}/${prod}` = "${remote}/${prod}" ]; then
 		branch=${prod}
 		commit=`git show-ref -s ${ref}`
+	else
+		echo "tag not on ${prod}: ${ref}"
 	fi
 else
 	echo "Unsupported ref ${ref}"
@@ -32,17 +31,22 @@ if [ "${branch}" != "" ]; then
 	cd ${wk}
 	if [ $? -ne 0 ]; then
 		echo "Cannot cd into worktree of ${branch}"
+	else
+		echo "cd into ${wk}"
 	fi
 fi
 if [ "${commit}" != "" ]; then
-	if [ "${commit}" != `git show-ref -s refs/heads/${branch}` ]; then
+	head=`git show-ref -s refs/heads/${branch}`
+	if [ "${commit}" != "${head}" ]; then
+		echo "merge ${commit} onto ${head}"
 		git stash -u
 		git merge ${ref}
 		git stash pop
-		export gh_worktree="${wk}"
 		exit 0
 	else
 		echo "${branch} already at ${commit}"
 	fi
+else
+	echo "no commit for ref ${ref} on branch ${branch}"
 fi
 exit 1
