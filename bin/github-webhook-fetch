@@ -1,0 +1,48 @@
+#!/bin/sh
+
+remote="origin"
+prod="prod"
+
+bare=$1
+
+ref=${gh_ref}		# refs/heads/<branch> or refs/tags/<tag>
+
+# get latest changes
+cd $bare
+git fetch --all -f -p
+
+branch=""
+commit=""
+
+code=1
+if [[ "${ref}" =~ ^refs/heads/* ]]; then
+	branch=${ref#refs/heads/}
+	commit=`git show-ref -s refs/remotes/${upstream}/${branch}`
+else if [[ "${ref}" =~ ^refs/tags/* ]]; then
+	# check if last commit of branch prod is this commit
+	if [ `git branch -r --contains ${ref} ${remote}/${prod}` = "${remote}/${prod}" ]; then
+		branch=${prod}
+		commit=`git show-ref -s ${ref}`
+	fi
+else
+	echo "Unsupported ref ${ref}"
+fi
+if [ "${branch}" != "" ]; then
+	wk=`git worktree list | grep "\[${branch}\]" | cut -f1 -d' '`
+	cd ${wk}
+	if [ $? -ne 0 ]; then
+		echo "Cannot cd into worktree of ${branch}"
+	fi
+fi
+if [ "${commit}" != "" ]; then
+	if [ "${commit}" != `git show-ref -s refs/heads/${branch}` ]; then
+		git stash -u
+		git merge ${ref}
+		git stash pop
+		export gh_worktree="${wk}"
+		exit 0
+	else
+		echo "${branch} already at ${commit}"
+	fi
+fi
+exit 1
