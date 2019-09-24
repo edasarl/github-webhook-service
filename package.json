@@ -17,6 +17,6 @@
   },
   "homepage": "https://github.com/edasarl/github-webhook-service#readme",
   "dependencies": {
-    "github-webhook": "^2.0.1"
+    "@kapouer/github-webhook": "^2.0.2"
   }
 }
