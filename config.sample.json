@@ -1,0 +1,10 @@
+{
+	"port": 33333,
+	"path": "/customizeme",
+	"secret": "xxxxxxx",
+	"log": "./log.txt", // disable in production
+	"rules": [{
+		"event": "push",
+		"exec": "dir=\"${PWD}/bin\"; cd ~/repositories/${gh_repository_name}.git || exit 1; . ${dir}/github-webhook-fetch; make install;  make restart"
+	}]
+}
