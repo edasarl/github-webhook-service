@@ -25,6 +25,12 @@ elif [ "${ref}" != "${ref#refs/tags/}" ]; then
 	if [ "${remote_prod}" = "${remote}/${prod}" ]; then
 		branch=${prod}
 		commit=`git show-ref -s ${ref}`
+		remoteHead=`git show-ref -s refs/remotes/${remote}/${branch}`
+		if [ "${remoteHead}" != "${commit}" ]; then
+			echo "tag points at commit that is not HEAD of ${branch}"
+			branch=""
+			commit=""
+		fi
 	else
 		echo "tag not on ${prod}: ${ref}"
 	fi
