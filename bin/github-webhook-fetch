@@ -11,10 +11,13 @@ git fetch --all -f -p
 branch=""
 commit=""
 
-code=1
 if [ "${ref}" != "${ref#refs/heads/}" ]; then
-	branch=${ref#refs/heads/}
-	commit=`git show-ref -s refs/remotes/${remote}/${branch}`
+	if [ "${ref}" != "refs/heads/${prod}" ]; then
+		branch=${ref#refs/heads/}
+		commit=`git show-ref -s refs/remotes/${remote}/${branch}`
+	else
+		echo "Not updating branch ${prod}"
+	fi
 elif [ "${ref}" != "${ref#refs/tags/}" ]; then
 	# check if last commit of branch prod is this commit
 	if [ `git branch -r --contains ${ref} ${remote}/${prod}` = "${remote}/${prod}" ]; then
@@ -34,6 +37,8 @@ if [ "${branch}" != "" ]; then
 	else
 		echo "cd into ${wk}"
 	fi
+else
+	exit 1
 fi
 if [ "${commit}" != "" ]; then
 	head=`git show-ref -s refs/heads/${branch}`
