@@ -51,8 +51,9 @@ if [ "${commit}" != "" ]; then
 		git stash pop
 	else
 		echo "${branch} already at ${commit}"
+		exit 1
 	fi
 else
 	echo "no commit for ref ${ref} on branch ${branch}"
+	exit 1
 fi
-exit 1
