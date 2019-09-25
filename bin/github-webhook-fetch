@@ -49,7 +49,6 @@ if [ "${commit}" != "" ]; then
 		git stash -u
 		git reset --hard ${commit}
 		git stash pop
-		exit 0
 	else
 		echo "${branch} already at ${commit}"
 	fi
