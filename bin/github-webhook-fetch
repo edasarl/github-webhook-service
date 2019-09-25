@@ -1,5 +1,7 @@
 #!/bin/sh
 
+# set -x
+
 remote="origin"
 prod="prod"
 
@@ -10,7 +12,6 @@ git fetch --all -f -p
 
 branch=""
 commit=""
-
 if [ "${ref}" != "${ref#refs/heads/}" ]; then
 	if [ "${ref}" != "refs/heads/${prod}" ]; then
 		branch=${ref#refs/heads/}
@@ -20,7 +21,8 @@ if [ "${ref}" != "${ref#refs/heads/}" ]; then
 	fi
 elif [ "${ref}" != "${ref#refs/tags/}" ]; then
 	# check if last commit of branch prod is this commit
-	if [ `git branch -r --contains ${ref} ${remote}/${prod}` = "${remote}/${prod}" ]; then
+	remote_prod=`git branch -r --contains ${ref} ${remote}/${prod} | xargs`
+	if [ "${remote_prod}" = "${remote}/${prod}" ]; then
 		branch=${prod}
 		commit=`git show-ref -s ${ref}`
 	else
@@ -43,9 +45,9 @@ fi
 if [ "${commit}" != "" ]; then
 	head=`git show-ref -s refs/heads/${branch}`
 	if [ "${commit}" != "${head}" ]; then
-		echo "merge ${commit} onto ${head}"
+		echo "reset ${branch} to ${commit}"
 		git stash -u
-		git merge ${commit}
+		git reset --hard ${commit}
 		git stash pop
 		exit 0
 	else
