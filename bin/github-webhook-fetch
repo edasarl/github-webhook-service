@@ -40,7 +40,7 @@ if [ "${commit}" != "" ]; then
 	if [ "${commit}" != "${head}" ]; then
 		echo "merge ${commit} onto ${head}"
 		git stash -u
-		git merge ${ref}
+		git merge ${commit}
 		git stash pop
 		exit 0
 	else
