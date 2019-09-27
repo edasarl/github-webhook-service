@@ -8,7 +8,7 @@ prod="prod"
 ref=${gh_ref}		# refs/heads/<branch> or refs/tags/<tag>
 
 # get latest changes
-git fetch --all -f -p
+git fetch --all --force --prune --quiet
 
 branch=""
 commit=""
@@ -52,9 +52,9 @@ if [ "${commit}" != "" ]; then
 	head=`git show-ref -s refs/heads/${branch}`
 	if [ "${commit}" != "${head}" ]; then
 		echo "reset ${branch} to ${commit}"
-		git stash -u
-		git reset --hard ${commit}
-		git stash pop
+		git stash --include-untracked --quiet
+		git reset --quiet --hard ${commit}
+		git stash pop --quiet
 	else
 		echo "${branch} already at ${commit}"
 		exit 1
