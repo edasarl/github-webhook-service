@@ -5,6 +5,7 @@
 	"log": "./log.txt", // disable in production
 	"rules": [{
 		"event": "push",
-		"exec": "dir=\"${PWD}/bin\"; cd ~/repositories/${gh_repository_name}.git || exit 1; . ${dir}/github-webhook-fetch; make install;  make restart"
+		"exec": "dir=\"${PWD}/bin\"; cd ~/repositories/${gh_repository_name}.git || exit 1; . ${dir}/github-webhook-fetch; make install;  make restart",
+    "report": "echo \"${gh_report}\" | mail -s \"${gh_repository_name}\" \"${gh_pusher_name} <${gh_pusher_email}>\""
 	}]
 }
