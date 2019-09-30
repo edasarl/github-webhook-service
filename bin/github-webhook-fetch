@@ -54,7 +54,7 @@ if [ "${commit}" != "" ]; then
 		echo "reset ${branch} to ${commit}"
 		git stash --include-untracked --quiet
 		git reset --quiet --hard ${commit}
-		git stash pop --quiet
+		git stash pop
 	else
 		echo "${branch} already at ${commit}"
 		exit 1
